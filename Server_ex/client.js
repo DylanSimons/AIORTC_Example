@@ -69,6 +69,7 @@ function negotiate() {
     }).then(function() {
         var offer = pc.localDescription;
         var codec;
+        var fetchConfig;
 
         codec = document.getElementById('audio-codec').value;
         if (codec !== 'default') {
@@ -81,7 +82,7 @@ function negotiate() {
         }
 
         document.getElementById('offer-sdp').textContent = offer.sdp;
-        return fetch('/offer', {
+        fetchConfig = {
             body: JSON.stringify({
                 sdp: offer.sdp,
                 type: offer.type,
@@ -91,7 +92,10 @@ function negotiate() {
                 'Content-Type': 'application/json'
             },
             method: 'POST'
-        });
+        }
+        console.log(fetchConfig);
+
+        return fetch('/offer', fetchConfig);
     }).then(function(response) {
         return response.json();
     }).then(function(answer) {
